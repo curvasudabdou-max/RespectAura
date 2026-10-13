@@ -1,0 +1,1491 @@
+
+
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Respect Aura | FiveM Store</title>
+
+
+
+<style>
+
+:root {
+
+  --bg:#090510;
+
+  --panel:#140d20;
+
+  --panel2:#211331;
+
+  --purple:#a855f7;
+
+  --light:#d8b4fe;
+
+  --text:#faf5ff;
+
+  --muted:#b9a9cc;
+
+  --border:#42245e;
+
+}
+
+
+
+* { box-sizing:border-box; }
+
+
+
+body {
+  margin:0;
+  background-color:var(--bg);
+  background-image:linear-gradient(rgba(9,5,16,.60), rgba(9,5,16,.78)), url("assets/site-background.png");
+  background-position:center center;
+  background-size:cover;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+}
+
+
+
+button,input { font:inherit; }
+
+button,a { -webkit-tap-highlight-color:transparent; }
+
+a { text-decoration:none;color:inherit; }
+
+
+
+header {
+
+  position:sticky;
+
+  top:0;
+
+  z-index:10;
+
+  background:rgba(9,5,16,.96);
+
+  border-bottom:1px solid var(--border);
+
+  backdrop-filter:blur(12px);
+
+}
+
+
+
+.nav {
+
+  max-width:1200px;
+
+  margin:auto;
+
+  padding:16px 20px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+}
+
+
+
+.logo {
+
+  color:var(--light);
+
+  font-size:23px;
+
+  font-weight:900;
+
+  text-shadow:0 0 18px #a855f755;
+
+}
+
+
+
+.nav-actions { display:flex;gap:8px; }
+
+
+
+.btn {
+
+  padding:11px 15px;
+
+  border:1px solid var(--border);
+
+  border-radius:9px;
+
+  background:var(--panel2);
+
+  color:white;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+
+
+.btn:hover {
+
+  border-color:var(--purple);
+
+  box-shadow:0 0 15px #a855f733;
+
+  transform:translateY(-2px);
+
+}
+
+
+
+.btn-purple {
+
+  background:linear-gradient(135deg,#9333ea,#6b21a8);
+
+  border-color:#a855f7;
+
+  color:white;
+
+  font-weight:bold;
+
+}
+
+
+
+.hero {
+
+  max-width:1200px;
+
+  margin:auto;
+
+  padding:65px 20px;
+
+  display:grid;
+
+  grid-template-columns:1.3fr .7fr;
+
+  gap:30px;
+
+  align-items:center;
+
+}
+
+
+
+.eyebrow {
+
+  color:var(--light);
+
+  font-weight:bold;
+
+}
+
+
+
+h1 {
+
+  font-size:clamp(35px,6vw,65px);
+
+  line-height:1.25;
+
+  margin:16px 0;
+
+}
+
+
+
+h1 span { color:var(--light); }
+
+
+
+.hero p {
+
+  color:var(--muted);
+
+  line-height:2;
+
+}
+
+
+
+.hero-card {
+
+  min-height:260px;
+
+  padding:30px;
+
+  border:1px solid #7836a8;
+
+  border-radius:20px;
+
+  text-align:center;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:
+
+    radial-gradient(circle at top,#6325a0 0,transparent 70%),
+
+    linear-gradient(145deg,#211331,#0d0815);
+
+  box-shadow:0 0 35px #7e22ce18;
+
+}
+
+
+
+.hero-icon { font-size:75px; }
+
+.hero-card h2 { color:var(--light); }
+
+
+
+.stats {
+
+  max-width:1200px;
+
+  margin:0 auto 25px;
+
+  padding:0 20px;
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:12px;
+
+}
+
+
+
+.stat {
+
+  text-align:center;
+
+  padding:20px;
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  background:var(--panel);
+
+}
+
+
+
+.stat strong {
+
+  display:block;
+
+  color:var(--light);
+
+  font-size:23px;
+
+}
+
+
+
+.stat span { color:var(--muted);font-size:13px; }
+
+
+
+main {
+
+  max-width:1200px;
+
+  margin:auto;
+
+  padding:25px 20px 60px;
+
+}
+
+
+
+.section-title {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:12px;
+
+  margin-bottom:20px;
+
+}
+
+
+
+.section-title h2 { margin:0; }
+
+.section-title h2 span { color:var(--light); }
+
+
+
+.search {
+
+  width:100%;
+
+  padding:13px;
+
+  color:white;
+
+  background:var(--panel);
+
+  border:1px solid var(--border);
+
+  border-radius:9px;
+
+  outline:none;
+
+  margin-bottom:15px;
+
+}
+
+
+
+.search:focus { border-color:var(--purple); }
+
+
+
+.filters {
+
+  display:flex;
+
+  gap:8px;
+
+  flex-wrap:wrap;
+
+  margin-bottom:25px;
+
+}
+
+
+
+.filter {
+
+  padding:10px 15px;
+
+  border-radius:25px;
+
+  background:var(--panel);
+
+  color:var(--muted);
+
+  border:1px solid var(--border);
+
+  cursor:pointer;
+
+}
+
+
+
+.filter.active,.filter:hover {
+
+  background:var(--purple);
+
+  color:white;
+
+  border-color:var(--purple);
+
+}
+
+
+
+.grid {
+
+  display:grid;
+
+  grid-template-columns:repeat(3,minmax(0,1fr));
+
+  gap:20px;
+
+}
+
+
+
+.product {
+
+  min-width:0;
+
+  overflow:hidden;
+
+  background:var(--panel);
+
+  border:1px solid var(--border);
+
+  border-radius:14px;
+
+  transition:.2s;
+
+}
+
+
+
+.product:hover {
+
+  transform:translateY(-4px);
+
+  border-color:var(--purple);
+
+  box-shadow:0 0 22px #a855f722;
+
+}
+
+
+
+.product-image {
+
+  width:100%;
+
+  height:210px;
+
+  object-fit:cover;
+
+  display:block;
+
+  background:#1b1228;
+
+}
+
+
+
+.no-image {
+
+  height:210px;
+
+  display:none;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:8px;
+
+  color:var(--muted);
+
+  background:linear-gradient(135deg,#241334,#100a19);
+
+}
+
+
+
+.no-image span { font-size:45px; }
+
+
+
+.product-content { padding:16px; }
+
+
+
+.product-top {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:8px;
+
+}
+
+
+
+.product h3 { margin:0;font-size:17px; }
+
+
+
+.tag {
+
+  color:var(--light);
+
+  background:#39204f;
+
+  padding:5px 9px;
+
+  border-radius:20px;
+
+  font-size:11px;
+
+}
+
+
+
+.description {
+
+  color:var(--muted);
+
+  font-size:13px;
+
+  line-height:1.7;
+
+  min-height:22px;
+
+}
+
+
+
+.product-bottom {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:8px;
+
+  margin-top:15px;
+
+}
+
+
+
+.price { color:var(--light);font-weight:bold; }
+
+
+
+.empty {
+
+  grid-column:1/-1;
+
+  text-align:center;
+
+  padding:45px 10px;
+
+  color:var(--muted);
+
+}
+
+
+
+.info-section {
+
+  margin-top:55px;
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:15px;
+
+}
+
+
+
+.info {
+
+  background:var(--panel);
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  padding:22px;
+
+}
+
+
+
+.info h3 { color:var(--light); }
+
+.info p { color:var(--muted);line-height:1.8;font-size:14px; }
+
+
+
+footer {
+
+  text-align:center;
+
+  padding:30px 15px;
+
+  border-top:1px solid var(--border);
+
+  color:var(--muted);
+
+  line-height:2;
+
+}
+
+
+
+.overlay {
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:30;
+
+  background:#000b;
+
+  display:none;
+
+}
+
+
+
+.overlay.show { display:block; }
+
+
+
+.cart-panel {
+
+  position:absolute;
+
+  top:0;
+
+  left:0;
+
+  height:100%;
+
+  overflow-y:auto;
+
+  width:min(420px,100%);
+
+  padding:22px;
+
+  background:#100a19;
+
+  border-right:1px solid var(--border);
+
+}
+
+
+
+.cart-header {
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  border-bottom:1px solid var(--border);
+
+  padding-bottom:12px;
+
+}
+
+
+
+.cart-item {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:15px 0;
+
+  border-bottom:1px solid var(--border);
+
+}
+
+
+
+.cart-item small {
+
+  display:block;
+
+  color:var(--muted);
+
+  margin-top:5px;
+
+}
+
+
+
+.cart-total {
+
+  display:flex;
+
+  justify-content:space-between;
+
+  margin:22px 0;
+
+  font-weight:bold;
+
+  font-size:19px;
+
+}
+
+
+
+.cart-actions { display:grid;gap:10px; }
+
+.full { width:100%; }
+
+
+
+.notice {
+
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.8;
+
+}
+
+
+
+@media(max-width:850px) {
+
+  .hero { grid-template-columns:1fr;padding-top:40px; }
+
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+  .info-section { grid-template-columns:1fr; }
+
+}
+
+
+
+@media(max-width:520px) {
+
+  .nav { padding:12px; }
+
+  .logo { font-size:17px; }
+
+  .nav-actions .btn { padding:9px;font-size:12px; }
+
+  .grid { grid-template-columns:1fr; }
+
+  .stats { grid-template-columns:1fr; }
+
+  .product-image,.no-image { height:230px; }
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<header>
+
+  <div class="nav">
+
+    <a href="#" class="logo">RESPECT AURA</a>
+
+    <div class="nav-actions">
+
+      <a href="#store" class="btn">المتجر</a>
+
+      <button class="btn btn-purple" onclick="openCart()">
+
+        🛒 السلة <span id="cartCount">0</span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<section class="hero">
+
+  <div>
+
+    <div class="eyebrow">✦ PREMIUM FIVEM STORE ✦</div>
+
+    <h1>عيش تجربتك مع<br><span>Respect Aura</span></h1>
+
+    <p>
+
+      اكتشف السيارات والشخصيات والإضافات المميزة لسيرفر FiveM متاعك.
+
+      اختار منتجاتك وعيش تجربة مختلفة مع Respect Aura.
+
+    </p>
+
+    <a href="#store" class="btn btn-purple">اكتشف المنتجات ←</a>
+
+  </div>
+
+
+
+  <div class="hero-card">
+
+    <div class="hero-icon">💜</div>
+
+    <h2>RESPECT AURA</h2>
+
+    <p>YOUR STYLE. YOUR SERVER. YOUR AURA.</p>
+
+  </div>
+
+</section>
+
+
+
+<section class="stats">
+
+  <div class="stat"><strong>Cars</strong><span>سيارات مميزة</span></div>
+
+  <div class="stat"><strong>Peds</strong><span>شخصيات متنوعة</span></div>
+
+  <div class="stat"><strong>FiveM</strong><span>متجرك الخاص</span></div>
+
+</section>
+
+
+
+<main id="store">
+
+  <div class="section-title">
+
+    <h2>منتجات <span>Respect Aura</span></h2>
+
+    <span style="color:var(--muted)">الأسعار بالريال السعودي SAR</span>
+
+  </div>
+
+
+
+  <input
+
+    id="searchInput"
+
+    class="search"
+
+    type="search"
+
+    placeholder="🔎 ابحث على منتج..."
+
+  >
+
+
+
+  <div class="filters">
+
+    <button class="filter active" data-cat="All">الكل</button>
+
+    <button class="filter" data-cat="Cars">🚘 Cars</button>
+
+    <button class="filter" data-cat="Peds">🧍 Peds</button>
+
+    <button class="filter" data-cat="Gang">💀 Gang</button>
+
+    <button class="filter" data-cat="Helicopters">🚁 Helicopters</button>
+
+  </div>
+
+
+
+  <div class="grid" id="productsGrid"></div>
+
+
+
+  <section class="info-section">
+
+    <div class="info">
+
+      <h3>🚘 Cars</h3>
+
+      <p>سيارات مميزة لسيرفر FiveM متاعك.</p>
+
+    </div>
+
+    <div class="info">
+
+      <h3>🧍 Peds & Gang</h3>
+
+      <p>شخصيات متنوعة باش تخصّص تجربة اللعب.</p>
+
+    </div>
+
+    <div class="info">
+
+      <h3>💜 Respect Aura</h3>
+
+      <p>اختار منتجاتك وتأكد من تفاصيلها قبل الشراء.</p>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<div class="overlay" id="cartOverlay">
+
+  <aside class="cart-panel">
+
+    <div class="cart-header">
+
+      <h2>🛒 سلة المشتريات</h2>
+
+      <button class="btn" id="closeCart">✕</button>
+
+    </div>
+
+
+
+    <div id="cartItems"></div>
+
+
+
+    <div class="cart-total">
+
+      <span>المجموع</span>
+
+      <span id="cartTotal">0 SAR</span>
+
+    </div>
+
+
+
+    <div class="cart-actions">
+
+      <button class="btn btn-purple full" id="checkoutBtn">إكمال الطلب</button>
+
+      <button class="btn full" id="clearCart">إفراغ السلة</button>
+
+    </div>
+
+
+
+    <p class="notice">
+
+      الدفع الإلكتروني غير مربوط في هذه النسخة.
+
+      يلزم إعداد بوابة دفع حقيقية قبل استقبال الأموال.
+
+    </p>
+
+  </aside>
+
+</div>
+
+
+
+<footer>
+
+  <div class="logo">RESPECT AURA</div>
+
+  <p>متجر FiveM الخاص بيك 💜</p>
+
+  <p>© <span id="year"></span> Respect Aura</p>
+
+</footer>
+
+
+
+<script>
+
+"use strict";
+
+
+
+/*
+
+  مهم:
+
+  1. حط صورك داخل assets.
+
+  2. بدّل image لكل منتج باسم الصورة الحقيقي.
+
+  3. عندك 8 منتجات Peds هنا.
+
+  4. أسماء الملفات لازم تطابق الملفات الموجودة عندك بالحرف.
+
+*/
+
+
+
+const products = [
+
+  // CARS
+
+  {id:1,name:"Blue Performance Sedan",cat:"Cars",image:"assets/car-blue-sedan.png",price:45,desc:"سيارة رياضية مميزة"},
+
+  {id:2,name:"Night Street Coupe",cat:"Cars",image:"assets/car-night-coupe.png",price:55,desc:"كوبيه للقيادة الليلية"},
+
+  {id:3,name:"White Custom Sports",cat:"Cars",image:"assets/car-white-sports.png",price:50,desc:"سيارة رياضية بتصميم خاص"},
+
+  {id:4,name:"Black Luxury SUV",cat:"Cars",image:"assets/car-black-suv.png",price:60,desc:"سيارة SUV فاخرة"},
+
+
+
+  // PEDS - 8 منتجات
+
+  {id:5,name:"Ped 1",cat:"Peds",image:"assets/ped-1.png",price:25,desc:"FiveM Ped"},
+
+  {id:6,name:"Ped 2",cat:"Peds",image:"assets/ped-2.png",price:25,desc:"FiveM Ped"},
+
+  {id:7,name:"Ped 3",cat:"Peds",image:"assets/ped-3.png",price:25,desc:"FiveM Ped"},
+
+  {id:8,name:"Ped 4",cat:"Peds",image:"assets/ped-4.png",price:25,desc:"FiveM Ped"},
+
+  {id:9,name:"Ped 5",cat:"Peds",image:"assets/ped-5.png",price:25,desc:"FiveM Ped"},
+
+  {id:10,name:"Ped 6",cat:"Peds",image:"assets/ped-6.png",price:25,desc:"FiveM Ped"},
+
+  {id:11,name:"Ped 7",cat:"Peds",image:"assets/ped-7.png",price:25,desc:"FiveM Ped"},
+
+  {id:12,name:"Ped 8",cat:"Peds",image:"assets/ped-8.png",price:25,desc:"FiveM Ped"},
+
+
+
+  // GANG
+
+  {id:13,name:"Tattoo Biker",cat:"Gang",image:"assets/gang-1.png",price:35,desc:"Gang Ped"},
+
+  {id:14,name:"Yellow Bandana",cat:"Gang",image:"assets/gang-2.png",price:30,desc:"Gang Ped"},
+
+
+
+  // HELICOPTERS
+
+  {id:15,name:"Premium Helicopter",cat:"Helicopters",image:"assets/helicopter.png",price:80,desc:"هليكوبتر مميزة"}
+
+];
+
+
+
+let activeCategory = "All";
+
+let cart = [];
+
+
+
+const money = value =>
+
+  value.toLocaleString("en-US") + " SAR";
+
+
+
+function safeText(value) {
+
+  return String(value).replace(/[&<>"']/g, char => ({
+
+    "&":"&amp;",
+
+    "<":"&lt;",
+
+    ">":"&gt;",
+
+    '"':"&quot;",
+
+    "'":"&#39;"
+
+  })[char]);
+
+}
+
+
+
+function renderProducts() {
+
+  const grid = document.getElementById("productsGrid");
+
+  const query = document.getElementById("searchInput").value
+
+    .trim()
+
+    .toLowerCase();
+
+
+
+  const filtered = products.filter(product => {
+
+    const categoryMatches =
+
+      activeCategory === "All" || product.cat === activeCategory;
+
+
+
+    const searchMatches =
+
+      (product.name + " " + product.cat + " " + product.desc)
+
+        .toLowerCase()
+
+        .includes(query);
+
+
+
+    return categoryMatches && searchMatches;
+
+  });
+
+
+
+  if (!filtered.length) {
+
+    grid.innerHTML =
+
+      '<div class="empty">ما لقيناش منتجات مطابقة للبحث.</div>';
+
+    return;
+
+  }
+
+
+
+  grid.innerHTML = filtered.map(product => `
+
+    <article class="product">
+
+      <img
+
+        class="product-image"
+
+        src="${safeText(product.image)}"
+
+        alt="${safeText(product.name)}"
+
+        loading="lazy"
+
+      >
+
+      <div class="no-image">
+
+        <span>🖼️</span>
+
+        <small>راجع اسم الصورة داخل assets</small>
+
+      </div>
+
+
+
+      <div class="product-content">
+
+        <div class="product-top">
+
+          <h3>${safeText(product.name)}</h3>
+
+          <span class="tag">${safeText(product.cat)}</span>
+
+        </div>
+
+
+
+        <p class="description">${safeText(product.desc)}</p>
+
+
+
+        <div class="product-bottom">
+
+          <span class="price">${money(product.price)}</span>
+
+          <button class="btn btn-purple add-btn" data-id="${product.id}">
+
+            + أضف للسلة
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+  `).join("");
+
+
+
+  // نربط حدث الصورة بعد إنشاء بطاقات المنتجات
+
+  grid.querySelectorAll(".product-image").forEach(img => {
+
+    img.addEventListener("error", () => {
+
+      img.style.display = "none";
+
+      img.nextElementSibling.style.display = "flex";
+
+    }, {once:true});
+
+  });
+
+
+
+  grid.querySelectorAll(".add-btn").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      addToCart(Number(button.dataset.id));
+
+    });
+
+  });
+
+}
+
+
+
+function addToCart(id) {
+
+  const product = products.find(item => item.id === id);
+
+  if (!product) return;
+
+
+
+  const existing = cart.find(item => item.id === id);
+
+
+
+  if (existing) {
+
+    existing.quantity += 1;
+
+  } else {
+
+    cart.push({...product, quantity:1});
+
+  }
+
+
+
+  updateCart();
+
+}
+
+
+
+function removeFromCart(id) {
+
+  cart = cart.filter(item => item.id !== id);
+
+  updateCart();
+
+}
+
+
+
+function updateCart() {
+
+  document.getElementById("cartCount").textContent =
+
+    cart.reduce((sum,item) => sum + item.quantity,0);
+
+
+
+  const total = cart.reduce(
+
+    (sum,item) => sum + item.price * item.quantity,0
+
+  );
+
+
+
+  document.getElementById("cartTotal").textContent = money(total);
+
+
+
+  const container = document.getElementById("cartItems");
+
+
+
+  if (!cart.length) {
+
+    container.innerHTML = '<div class="empty">السلة فارغة 🛒</div>';
+
+    return;
+
+  }
+
+
+
+  container.innerHTML = cart.map(item => `
+
+    <div class="cart-item">
+
+      <div>
+
+        <strong>${safeText(item.name)}</strong>
+
+        <small>الكمية: ${item.quantity}</small>
+
+        <small>${money(item.price * item.quantity)}</small>
+
+      </div>
+
+      <button class="btn remove-btn" data-id="${item.id}">حذف</button>
+
+    </div>
+
+  `).join("");
+
+
+
+  container.querySelectorAll(".remove-btn").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      removeFromCart(Number(button.dataset.id));
+
+    });
+
+  });
+
+}
+
+
+
+function openCart() {
+
+  document.getElementById("cartOverlay").classList.add("show");
+
+}
+
+
+
+function closeCart() {
+
+  document.getElementById("cartOverlay").classList.remove("show");
+
+}
+
+
+
+document.querySelectorAll(".filter").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    activeCategory = button.dataset.cat;
+
+
+
+    document.querySelectorAll(".filter").forEach(item => {
+
+      item.classList.toggle("active", item === button);
+
+    });
+
+
+
+    renderProducts();
+
+  });
+
+});
+
+
+
+document.getElementById("searchInput").addEventListener("input", renderProducts);
+
+document.getElementById("closeCart").addEventListener("click", closeCart);
+
+
+
+document.getElementById("cartOverlay").addEventListener("click", event => {
+
+  if (event.target.id === "cartOverlay") closeCart();
+
+});
+
+
+
+document.getElementById("clearCart").addEventListener("click", () => {
+
+  cart = [];
+
+  updateCart();
+
+});
+
+
+
+document.getElementById("checkoutBtn").addEventListener("click", () => {
+
+  if (!cart.length) {
+
+    alert("السلة فارغة. زيد منتج الأول.");
+
+    return;
+
+  }
+
+
+
+  const total = cart.reduce(
+
+    (sum,item) => sum + item.price * item.quantity,0
+
+  );
+
+
+
+  const order = cart.map(item =>
+
+    `${item.name} × ${item.quantity}`
+
+  ).join("\n");
+
+
+
+  alert(
+
+    "ملخّص الطلب:\n\n" + order +
+
+    "\n\nالمجموع: " + money(total) +
+
+    "\n\nالدفع غير مربوط بعد. هذا موش تأكيد دفع."
+
+  );
+
+});
+
+
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+
+
+renderProducts();
+
+updateCart();
+
+</script>
+
+
+
+</body>
+
+</html>
