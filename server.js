@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.disable("x-powered-by");
 app.use(express.json({ limit: "20kb" }));
 
-// Respect Aura — أسعار المنتجات الأصلية بالريال السعودي
+// Respect Aura - Product prices in SAR
 const PRODUCTS = {
   1: { name: "Blue Performance Sedan", priceSAR: 45 },
   2: { name: "Night Street Coupe", priceSAR: 55 },
@@ -30,19 +30,18 @@ const PRODUCTS = {
   15: { name: "Premium Helicopter", priceSAR: 80 }
 };
 
-// Temporary order storage. Replace with a persistent database for production.
 const orders = new Map();
 const ORDER_TTL_MS = 30 * 60 * 1000;
 
 function getConfig() {
-  const clientId = process.env.PAYPAL_CLIENT_ID;
-  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
-  const mode = (process.env.PAYPAL_MODE || "sandbox").toLowerCase();
-  const currency = (process.env.PAYPAL_CURRENCY || "USD").toUpperCase();
+  const clientId = process.env.PAYPAL_CLIENT_ID?.trim();
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET?.trim();
+  const mode = (process.env.PAYPAL_MODE || "sandbox").trim().toLowerCase();
+  const currency = (process.env.PAYPAL_CURRENCY || "USD").trim().toUpperCase();
   const rate = Number(process.env.SAR_TO_USD_RATE);
 
   if (!clientId || !clientSecret) {
-    throw new Error("PayPal credentials are not configured.");
+    throw new Error("PayPal credentials are missing.");
   }
 
   if (!["sandbox", "live"].includes(mode)) {
@@ -50,7 +49,7 @@ function getConfig() {
   }
 
   if (currency !== "USD") {
-    throw new Error("This configuration requires USD.");
+    throw new Error("PAYPAL_CURRENCY must be USD.");
   }
 
   if (!Number.isFinite(rate) || rate <= 0) {
@@ -63,9 +62,10 @@ function getConfig() {
     mode,
     currency,
     rate,
-    baseUrl: mode === "live"
-      ? "https://api-m.paypal.com"
-      : "https://api-m.sandbox.paypal.com"
+    baseUrl:
+      mode === "live"
+        ? "https://api-m.paypal.com"
+        : "https://api-m.sandbox.paypal.com"
   };
 }
 
@@ -124,9 +124,11 @@ function calculateOrder(items) {
 async function paypalRequest(endpoint, options = {}) {
   const config = getConfig();
 
-  const tokenResponse = await fetch(
-    `${config.baseUrl}/v1/oauth2/token`,
-    {
+  let tokenResponse;
+  let tokenData;
+
+  try {
+    tokenResponse = await fetch(`${config.baseUrl}/v1/oauth2/token`, {
       method: "POST",
       headers: {
         Authorization:
@@ -136,29 +138,66 @@ async function paypalRequest(endpoint, options = {}) {
           ).toString("base64"),
         "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: "grant_type=client_credentials"
-    }
-  );
+      body: "grant_type=client_credentials",
+      signal: AbortSignal.timeout(15000)
+    });
 
-  const tokenData = await tokenResponse.json();
+    const responseText = await tokenResponse.text();
+
+    try {
+      tokenData = JSON.parse(responseText);
+    } catch {
+      tokenData = {};
+    }
+  } catch (error) {
+    console.error("PayPal OAuth connection error:", error.name);
+    throw new Error("Could not connect to PayPal authentication.");
+  }
 
   if (!tokenResponse.ok || !tokenData.access_token) {
+    // Safe diagnostics: never log credentials or access tokens.
+    console.error("PayPal OAuth error:", {
+      status: tokenResponse.status,
+      name: tokenData.error || "unknown_error",
+      message: tokenData.error_description || "No error description"
+    });
+
     throw new Error("PayPal authentication failed.");
   }
 
-  const response = await fetch(`${config.baseUrl}${endpoint}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${tokenData.access_token}`,
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    }
-  });
+  let response;
+  let data;
 
-  const data = await response.json();
+  try {
+    response = await fetch(`${config.baseUrl}${endpoint}`, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`,
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      },
+      signal: AbortSignal.timeout(20000)
+    });
+
+    const responseText = await response.text();
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      data = {};
+    }
+  } catch (error) {
+    console.error("PayPal API connection error:", error.name);
+    throw new Error("Could not connect to PayPal API.");
+  }
 
   if (!response.ok) {
-    console.error("PayPal API error:", response.status, data.name);
+    console.error("PayPal API error:", {
+      status: response.status,
+      name: data.name || "unknown_error",
+      message: data.message || "No error message"
+    });
+
     const error = new Error("PayPal API request failed.");
     error.statusCode = response.status;
     throw error;
@@ -167,23 +206,26 @@ async function paypalRequest(endpoint, options = {}) {
   return data;
 }
 
-// Used by index.html to load the PayPal JavaScript SDK.
+// PayPal SDK configuration for index.html
 app.get("/api/paypal/config", (_req, res) => {
   try {
     const config = getConfig();
+
     res.set("Cache-Control", "no-store");
     res.json({
       clientId: config.clientId,
       currency: config.currency
     });
-  } catch {
+  } catch (error) {
+    console.error("PayPal configuration error:", error.message);
+
     res.status(503).json({
       error: "PayPal is not configured on the server."
     });
   }
 });
 
-// Create an order using server-calculated prices.
+// Create PayPal order
 app.post("/api/paypal/create-order", async (req, res) => {
   try {
     const order = calculateOrder(req.body?.items);
@@ -223,13 +265,14 @@ app.post("/api/paypal/create-order", async (req, res) => {
     res.json({ id: data.id });
   } catch (error) {
     console.error("Create order error:", error.message);
+
     res.status(400).json({
-      error: "Could not create PayPal order. Check the cart and server configuration."
+      error: "Could not create PayPal order. Check server logs."
     });
   }
 });
 
-// Verify the original order before capturing the payment.
+// Verify and capture PayPal payment
 app.post("/api/paypal/capture-order", async (req, res) => {
   const orderID = req.body?.orderID;
 
@@ -250,6 +293,7 @@ app.post("/api/paypal/capture-order", async (req, res) => {
 
   if (Date.now() - expected.createdAt > ORDER_TTL_MS) {
     orders.delete(orderID);
+
     return res.status(400).json({
       error: "Order expired. Please start checkout again."
     });
@@ -261,7 +305,6 @@ app.post("/api/paypal/capture-order", async (req, res) => {
     });
   }
 
-  // Reserve this order to prevent concurrent capture requests.
   expected.status = "CAPTURING";
 
   try {
@@ -298,7 +341,8 @@ app.post("/api/paypal/capture-order", async (req, res) => {
       }
     );
 
-    const capture = result.purchase_units?.[0]?.payments?.captures?.[0];
+    const capture =
+      result.purchase_units?.[0]?.payments?.captures?.[0];
 
     if (
       result.id !== orderID ||
@@ -326,7 +370,6 @@ app.post("/api/paypal/capture-order", async (req, res) => {
       totalUSD: expected.totalUSD
     });
 
-    // Keep completed order state temporarily to reject duplicate captures.
     res.set("Cache-Control", "no-store");
     res.json({
       success: true,
@@ -337,7 +380,6 @@ app.post("/api/paypal/capture-order", async (req, res) => {
   } catch (error) {
     console.error("Capture error:", error.message);
 
-    // Keep uncertain states reserved; do not blindly retry a capture.
     if (expected.status === "CAPTURING") {
       expected.status = "CAPTURE_REVIEW";
     }
@@ -348,11 +390,12 @@ app.post("/api/paypal/capture-order", async (req, res) => {
   }
 });
 
+// Health check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-// Serve the existing website.
+// Serve website files
 app.use(express.static(__dirname));
 
 app.listen(PORT, "0.0.0.0", () => {
