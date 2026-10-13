@@ -11,23 +11,23 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.disable("x-powered-by");
 app.use(express.json({ limit: "20kb" }));
 
-// Respect Aura - Product prices in SAR
+// Respect Aura - Product prices in USD
 const PRODUCTS = {
-  1: { name: "Blue Performance Sedan", priceSAR: 45 },
-  2: { name: "Night Street Coupe", priceSAR: 55 },
-  3: { name: "White Custom Sports", priceSAR: 50 },
-  4: { name: "Black Luxury SUV", priceSAR: 60 },
-  5: { name: "Ped 1", priceSAR: 25 },
-  6: { name: "Ped 2", priceSAR: 25 },
-  7: { name: "Ped 3", priceSAR: 25 },
-  8: { name: "Ped 4", priceSAR: 25 },
-  9: { name: "Ped 5", priceSAR: 25 },
-  10: { name: "Ped 6", priceSAR: 25 },
-  11: { name: "Ped 7", priceSAR: 25 },
-  12: { name: "Ped 8", priceSAR: 25 },
-  13: { name: "Tattoo Biker", priceSAR: 35 },
-  14: { name: "Yellow Bandana", priceSAR: 30 },
-  15: { name: "Premium Helicopter", priceSAR: 80 }
+  1: { name: "Blue Performance Sedan", priceUSD: 10 },
+  2: { name: "Night Street Coupe", priceUSD: 10 },
+  3: { name: "White Custom Sports", priceUSD: 10 },
+  4: { name: "Black Luxury SUV", priceUSD: 10 },
+  5: { name: "Ped 1", priceUSD: 14 },
+  6: { name: "Ped 2", priceUSD: 14 },
+  7: { name: "Ped 3", priceUSD: 14 },
+  8: { name: "Ped 4", priceUSD: 20 },
+  9: { name: "Ped 5", priceUSD: 14 },
+  10: { name: "Ped 6", priceUSD: 14 },
+  11: { name: "Ped 7", priceUSD: 14 },
+  12: { name: "Ped 8", priceUSD: 14 },
+  13: { name: "Tattoo Biker", priceUSD: 50 },
+  14: { name: "Yellow Bandana", priceUSD: 50 },
+  15: { name: "Premium Helicopter", priceUSD: 30 }
 };
 
 const orders = new Map();
@@ -38,7 +38,6 @@ function getConfig() {
   const clientSecret = process.env.PAYPAL_CLIENT_SECRET?.trim();
   const mode = (process.env.PAYPAL_MODE || "sandbox").trim().toLowerCase();
   const currency = (process.env.PAYPAL_CURRENCY || "USD").trim().toUpperCase();
-  const rate = Number(process.env.SAR_TO_USD_RATE);
 
   if (!clientId || !clientSecret) {
     throw new Error("PayPal credentials are missing.");
@@ -52,16 +51,11 @@ function getConfig() {
     throw new Error("PAYPAL_CURRENCY must be USD.");
   }
 
-  if (!Number.isFinite(rate) || rate <= 0) {
-    throw new Error("SAR_TO_USD_RATE must be a positive number.");
-  }
-
   return {
     clientId,
     clientSecret,
     mode,
     currency,
-    rate,
     baseUrl:
       mode === "live"
         ? "https://api-m.paypal.com"
@@ -103,22 +97,23 @@ function calculateOrder(items) {
     id,
     name: PRODUCTS[id].name,
     quantity,
-    priceSAR: PRODUCTS[id].priceSAR
+    priceUSD: PRODUCTS[id].priceUSD
   }));
 
-  const totalSAR = lines.reduce(
-    (sum, item) => sum + item.priceSAR * item.quantity,
+  const totalCents = lines.reduce(
+    (sum, item) =>
+      sum + Math.round(item.priceUSD * 100) * item.quantity,
     0
   );
 
-  const { rate, currency } = getConfig();
-  const totalUSD = (Math.round(totalSAR * rate * 100) / 100).toFixed(2);
+  const totalUSD = (totalCents / 100).toFixed(2);
+  const currency = "USD";
 
-  if (Number(totalUSD) <= 0) {
+  if (totalCents <= 0) {
     throw new Error("Invalid order total.");
   }
 
-  return { lines, totalSAR, totalUSD, currency };
+  return { lines, totalUSD, currency };
 }
 
 async function paypalRequest(endpoint, options = {}) {
@@ -155,7 +150,7 @@ async function paypalRequest(endpoint, options = {}) {
   }
 
   if (!tokenResponse.ok || !tokenData.access_token) {
-    // Safe diagnostics: never log credentials or access tokens.
+    // Never log credentials or access tokens.
     console.error("PayPal OAuth error:", {
       status: tokenResponse.status,
       name: tokenData.error || "unknown_error",
@@ -366,7 +361,6 @@ app.post("/api/paypal/capture-order", async (req, res) => {
     console.log("Respect Aura payment completed:", {
       orderID,
       captureID: capture.id,
-      totalSAR: expected.totalSAR,
       totalUSD: expected.totalUSD
     });
 
